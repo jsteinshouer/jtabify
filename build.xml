@@ -1,0 +1,38 @@
+
+<project name="Combine and minify javascript files" default="all" basedir=".">
+	<property file="build.properties" />
+	
+	<!-- Files names for distribution -->
+	<property name="JS" value="./jtabify.js" />
+	<property name="JS_MIN" value="./jtabify.min.js" />
+	
+	 <target name="js" description="Concatenate JavaScript source files">
+        <echo message="Building ${JS}" />
+        <concat destfile="${JS}">
+            <fileset dir="./lib" includes="raphael.js" />
+            <fileset dir="./lib" includes="jtab.js" />
+			<fileset dir="." includes="jquery.jtabify.js" />
+        </concat>
+        <echo message="${JS} built." />
+    </target>
+
+	<target name="js.minify" depends="js">
+		<echo message="Building ${JS_MIN}" />
+		<apply executable="java" parallel="false">
+	        <fileset dir="." includes="jtabify.js"/>
+	        <arg line="-jar"/>
+	        <arg path="${lib.yui}"/>
+	        <srcfile/>
+	        <arg line="-o"/>
+	        <mapper type="glob" from="jtabify.js" to="jtabify.min.js"/>
+	        <targetfile/>
+	    </apply>
+		<echo message="${JS_MIN} built." />
+	</target>
+	
+	<target name="all" depends="js, js.minify">
+        <echo message="Build complete." />
+    </target>
+ 	
+ 	
+</project>
